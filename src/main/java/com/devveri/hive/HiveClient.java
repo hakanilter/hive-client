@@ -42,14 +42,11 @@ public class HiveClient {
         final long wait = (Long.parseLong(config.getProperty("jdbc.wait")) * 1000L);
         final long timeout = System.currentTimeMillis() + (Long.parseLong(config.getProperty("jdbc.timeout")) * 1000L);
 
-        Gson objectMapper = new Gson();
         try (Connection connection = getConnection(url, user, pass, timeout, wait)) {
             try (Statement stmt = connection.createStatement()) {
                 if (query.trim().toLowerCase().startsWith("select")) {
                     try (ResultSet rs = stmt.executeQuery(query)) {
-                        while (rs.next()) {
-                            System.out.println(objectMapper.toJson(getResult(rs)));
-                        }
+                        processResults(rs);
                     }
                 } else {
                     stmt.execute(query);
@@ -76,12 +73,15 @@ public class HiveClient {
         throw new SQLException("Failed to connect database");
     }
 
-    private Map<String, Object> getResult(ResultSet rs) throws SQLException {
-        Map<String, Object> row = new HashMap<>(rs.getMetaData().getColumnCount());
-        for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-            row.put(rs.getMetaData().getColumnName(i), rs.getObject(i));
+    private void processResults(ResultSet rs) throws SQLException {
+        Gson objectMapper = new Gson();
+        while (rs.next()) {
+            Map<String, Object> row = new HashMap<>(rs.getMetaData().getColumnCount());
+            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                row.put(rs.getMetaData().getColumnName(i), rs.getObject(i));
+            }
+            System.out.println(objectMapper.toJson(row));
         }
-        return row;
     }
 
     private Properties getConfig() throws IOException {
