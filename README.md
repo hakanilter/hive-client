@@ -14,3 +14,16 @@ docker rm cloudera
 docker run --name cloudera --hostname=quickstart.cloudera --privileged=true --publish-all=true -t -i -p 10000:10000 -d cloudera/quickstart /usr/bin/docker-quickstart
 scripts/hive-client.sh -e "CREATE DATABASE test; CREATE TABLE test.test (test STRING); INSERT INTO test.test SELECT "test";
 ```
+
+It requires a properties file for connection and timeout details:
+```
+# jdbc configuration
+jdbc.driver=org.apache.hive.jdbc.HiveDriver
+jdbc.url=jdbc:hive2://localdocker:10000/test
+jdbc.user=
+jdbc.pass=
+# total timeout for running the query
+jdbc.timeout=300
+# amount of time before re-running the query
+jdbc.wait=10
+```
