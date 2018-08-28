@@ -1,9 +1,9 @@
 Hive Client For Integration Tests
 =======
 
-This small client helps you creating integration tests with Dockerized Hive containers. 
+This small client helps you creating integration tests with Dockerized Hive images. 
 
-It uses only uses Hive JDBC driver to run given queries but once you run the query(or queries) it waits until getting a proper connection. This make it useful to work with Dockerized Hadoop images. It will fail if container doesn't show up before the timeout. 
+It uses only uses Hive JDBC driver to run given queries but once you run the query(or queries) it waits until getting a proper connection. This make it useful to work with docker containers. It will fail if container doesn't show up before the timeout. 
 
 Both inline queries and queries from file are supported.   
 
