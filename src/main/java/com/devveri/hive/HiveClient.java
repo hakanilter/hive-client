@@ -1,6 +1,5 @@
 package com.devveri.hive;
 
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,13 +73,25 @@ public class HiveClient {
     }
 
     private void processResults(ResultSet rs) throws SQLException {
-        Gson objectMapper = new Gson();
+        int rows = 0, columns = 0;
         while (rs.next()) {
-            Map<String, Object> row = new HashMap<>(rs.getMetaData().getColumnCount());
-            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                row.put(rs.getMetaData().getColumnName(i), rs.getObject(i));
+            if (rows++ == 0) {
+                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                    if (i > 1) {
+                        System.out.print("\t");
+                    }
+                    System.out.print(rs.getMetaData().getColumnName(i));
+                    ++columns;
+                }
+                System.out.println();
             }
-            System.out.println(objectMapper.toJson(row));
+            for (int i = 1; i <= columns; i++) {
+                if (i > 1) {
+                    System.out.print("\t");
+                }
+                System.out.print(rs.getObject(i));
+            }
+            System.out.println();
         }
     }
 
