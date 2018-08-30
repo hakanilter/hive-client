@@ -9,8 +9,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 public class HiveClient {
@@ -24,7 +22,9 @@ public class HiveClient {
 
     public void executeQuery(String content) throws SQLException, IOException, ClassNotFoundException {
         for (String query : content.split(";")) {
-            executeSQL(query);
+            if (!"".equals(query.trim())) {
+                executeSQL(query);
+            }
         }
     }
 
